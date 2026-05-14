@@ -6,3 +6,4 @@ srv.listen(port,()=>{
     console.log('server is up')
 })
 //nv akunl bufks
+םוןוטר
