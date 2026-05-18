@@ -1,63 +1,46 @@
-// const mysql=require('mysql');
-// const connection=mysql.createConnection({
-//     host:'localhost',
-//     user:'webapiadmin',
-//     password:'123123',
-//     database:'webapidb'
+const mysqlDb=require('../modoels/mysqldb');
+module.exports={
 
-// });
-// connection.connect();
+getAll:(req,res)=>{
+    const sql='SELECT * FROM t_product';
+    mysqlDb.query(sql,(err,results,feilds)=>{
+    if(err==null)
+    {
+        console.log(results);
+        res.status(200).json(results);
+    }
+    else
+    {
+        console.log(err);
+        res.status(500).json({'error': err.message});
+    }
+});
 
-// const obj={
-// getAllProducts:(req,res)=>{
-//    connection.query('SELECT * FROM T_Product',(error,results,fields)=>{
-//     if(error){
-//         comsole.log('cnot found ');
-//     }
-//     else{
-//       return res.status(200).json(results);
-//         console.log(results);
-//     }
-//    })
-// })
+},
 
+getById:(req,res)=>{
+const uid=req.params.id;
+res.status(200).json({msg:`get user id ${uid}`});
+},
 
+delete:(req,res)=>{
+const uid=req.params.id;
+res.status(200).json({msg:`delete user id ${uid}`});
+},
 
+update:(req,res)=>{
+const uid=req.params.id;
+res.status(200).json({msg:`updated user with id  ${uid}`});
+},
 
-    
-// getAll:(req,res)=>{
-//     connection.query('SELECT * FROM T_Product',(error,results,fields)=>{
-//     if(error){
-//         comsole.log('cnot found ');
-//     }
-//     else{
-//      res.status(200).json({msg:'all product'});
-//      console.log(results);
-//     }
-//     })
-// },
-    
-
-// getById:(req,res)=>{
-// const pid=req.params.id;
-// res.status(200).json({msg:`get product id ${pid}`});
-// },
+AddNew:(req,res)=>{
+res.status(200).json({msg:` created user with id ${uid}`});
+}
+};
 
 
-// delete:(req,res)=>{
-// const pid=req.params.id;
-// res.status(200).json({msg:`delete product id ${pid}`});
-// },
-
-// update:(req,res)=>{
-// const pid=req.params.id;
-// res.status(200).json({msg:`updated product with id  ${pid}`});
-// },
-
-// AddNew:(req,res)=>{
-// const pid=req.params.id;
-// res.status(200).json({msg:` created product with id ${pid}`});
-// }
 
 
-// module.exports=obj;
+
+
+
