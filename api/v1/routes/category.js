@@ -3,13 +3,12 @@ const categoryController=require('../controllrs/category');
 
 router.get('/',categoryController.getAll);
 
-router.get('/:id',categoryController.getById);
+router.get('/:cid',categoryController.getByid);
 
-router.delete('/:id',categoryController.delete);
+router.delete('/:cid',categoryController.delete);
 
-router.post('/',categoryController.AddNew);
+router.post('/',categoryController.add);
 
-router.put('/:id',categoryController.update);
-
+router.put('/:cid',categoryController.update);
 
 module.exports=router;

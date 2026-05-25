@@ -7,8 +7,8 @@ router.get('/:pid',productController.getById);
 
 router.delete('/:pid',productController.delete);
 
-router.post('/',productController.AddNew);
+router.post('/',productController.add);
 
-router.put('/:pid',productController.update);
+router.put('/:id',productController.update);
 
 module.exports=router;
