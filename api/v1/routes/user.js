@@ -3,13 +3,12 @@ const userController=require('../controllrs/user');
 
 router.get('/',userController.getAll);
 
-router.get('/:id',userController.getById);
+router.get('/:uid',userController.getById);
 
-router.delete('/:id',userController.delete);
+router.delete('/:uid',userController.delete);
 
-router.post('/',userController.AddNew);
+router.post('/',userController.add);
 
-router.put('/:id',userController.update);
-
+router.put('/:uid',userController.update);
 
 module.exports=router;

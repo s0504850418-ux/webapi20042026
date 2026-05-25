@@ -1,11 +1,12 @@
+require('dotenv').config();
 const express=require('express');
 const app=express();
 const morgan=require('morgan');
 
 const routerProduct=require('./api/v1/routes/product');
+const routerUser=require('./api/v1/routes/user');
+const routerCategory=require('./api/v1/routes/category');
 const orderRouter = require('./api/v1/routes/order');
-const userRouter=require('./api/v1/routes/user');
-const categoryRouter=require('./api/v1/routes/category');
 //const mylog=require('./api/v1/middlewares/mylog');
 
 // connection.connect();
@@ -43,9 +44,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use('/order', orderRouter);
 app.use('/product',routerProduct);
-app.use('/user',userRouter)
-app.use('/category',categoryRouter)
+app.use('/user',routerUser)
+app.use('/category',routerCategory)
+app.use('/order', orderRouter);
 
 module.exports=app;

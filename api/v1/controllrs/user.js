@@ -1,28 +1,139 @@
-module.exports={
+const mysqlDb = require('../modoels/mysqldb');
+module.exports = {
 
-getAll:(req,res)=>{
-    res.status(200).json({msg:'all users'});
-},
+    getAll: (req, res) => {
+        const sql = 'SELECT * FROM t_user';
+        mysqlDb.query(sql, (err, results, feilds) => {
+            if (err == null) {
+                console.log(results);
+                res.status(200).json(results);
+            }
+            else {
+                console.log(err);
+                res.status(500).json({ 'error': err.message });
+            }
+        });
+    },
+    getById: (req, res) => {
+        const uid = req.params.uid;
+        const sql = `SELECT * FROM t_user WHERE uid=${uid}`;
 
-getById:(req,res)=>{
-const uid=req.params.id;
-res.status(200).json({msg:`get user id ${uid}`});
-},
+        mysqlDb.query(sql, (err, results, feilds) => {
+            if (err == null) {
+                console.log(results);
+                res.status(200).json(results);
+            }
+            else {
+                console.log(err);
+                res.status(500).json({ 'error': err.message });
+            }
+        });
+    },
 
-delete:(req,res)=>{
-const uid=req.params.id;
-res.status(200).json({msg:`delete user id ${uid}`});
-},
+    delete: (req, res) => {
+        const uid = req.params.uid;
+        const sql = `DELETE FROM t_user WHERE uid=${uid}`;
+        mysqlDb.query(sql, (err, results, feilds) => {
+            if (err == null) {
+                console.log(results);
+                res.status(200).json(results);
+            }
+            else {
+                console.log(err);
+                res.status(500).json({ 'error': err.message });
+            }
+        });
+    },
 
-update:(req,res)=>{
-const uid=req.params.id;
-res.status(200).json({msg:`updated user with id  ${uid}`});
-},
+    update: (req, res) => {
+        const uid = req.params.uid;
+        let sql = 'update t_user set ';
+        let data = req.body;
+        let arr = Object.keys(data);
+        for (let i = 0; i < arr.length; i++) {
+            sql += `${arr[i]}='${data[arr[i]]}',`;
+        }
+        sql = sql.substring(0, sql.length - 1);
+        sql += ' where uid=' + uid;
+        mysqlDb.query(sql, (err, results, feilds) => {
+            if (err == null) {
+                console.log(results);
+                return res.status(200).json(results);
+            }
+            else {
+                console.log(err);
+                return res.status(500).json({ 'error': err.message });
+            }
+        });
+    },
 
-AddNew:(req,res)=>{
-res.status(200).json({msg:` created user with id ${uid}`});
-}
+
+
+
+
+
+
+
+    add: (req, res) => {
+
+        let data = req.body;
+        let arr = Object.keys(data);
+
+        let fields = "";
+        let values = "";
+
+        for (let i = 0; i < arr.length; i++) {
+
+            fields += `${arr[i]},`;
+
+            values += `'${data[arr[i]]}',`;
+        }
+
+        fields = fields.substring(0, fields.length - 1);
+        values = values.substring(0, values.length - 1);
+        let sql = `INSERT INTO t_user (${fields}) VALUES (${values})`;
+        mysqlDb.query(sql, (err, results, fields) => {
+            if (err == null) {
+
+                console.log(results);
+
+                return res.status(200).json(results);
+            }
+            else {
+
+                console.log(err);
+
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+        });
+    }
 };
+//     AddNew: (req, res) => {
+//         let sql = 'INSERT INTO t_user SET ';
+//         let data = req.body;
+//         let arr = Object.keys(data);
+//         let values = '';
+
+//         let filds = ''
+//         for (let i = 0; i < arr.length; i++) {
+//             sql += `${arr[i]}='${data[arr[i]]}',`;
+//         }
+//         sql = sql.substring(0, sql.length - 1);
+//         sql += ' where uid=' + uid;
+//         mysqlDb.query(sql, (err, results, feilds) => {
+//             if (err == null) {
+//                 console.log(results);
+//                 return res.status(200).json(results);
+//             }
+//             else {
+//                 console.log(err);
+//                 return res.status(500).json({ 'error': err.message });
+//             }
+//         });
+//     }
+// };
 
 
 

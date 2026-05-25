@@ -1,10 +1,11 @@
 const mysql=require('mysql2');
 const conn=mysql.createConnection(
     {
-      host:'localhost',
-      user:'a123',
-      password:'Aa12341234#',
-      database:'webapi'
+      host:process.env.MYSQLSRV,
+      user:process.env.MYSQLUSER,
+      password:process.env.MYSQLPASS,
+      port:process.env.MYSQLPORT,
+      database:process.env.MYSQLDB
     }
 );
 module.exports=conn;
