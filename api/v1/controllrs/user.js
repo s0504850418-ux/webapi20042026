@@ -74,24 +74,48 @@ module.exports = {
         let arr = Object.keys(data);
         let fields = "";
         let values = "";
-        for (let i = 0; i < arr.length; i++) {
-            fields += `${arr[i]},`;
-            values += `'${data[arr[i]]}',`;
-        }
-        fields = fields.substring(0, fields.length - 1);
-        values = values.substring(0, values.length - 1);
-        let sql = `INSERT INTO t_user (${fields}) VALUES (${values})`;
-        mysqlDb.query(sql, (err, results, fields) => {
-            if (err == null) {
+        let sql = `select * from t_user where email='${data.email}'`;
+        mysqlDb.query(sql, (err, results, fld) => {
+            if (err != null) {
                 console.log(results);
-                return res.status(200).json(results);
+                return res.status(500).json({ error: err.message });
+
             }
-            else {
+            else if (results.length > 0) {
                 console.log(err);
-                return res.status(500).json({
-                    error: err.message
-                });
+                return res.status(200).json({ msg: 'User allready exists' });
             }
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] == "pass") {
+                    let pass = data[arr[i]];
+                    let hashPass = bcrypt.hashSync(pass, 10);
+                    fields += `${arr[i]},`;
+                    values += `'${hashPass}',`;
+                }
+                else {
+                    fields += `${arr[i]},`;
+                    values += `'${data[arr[i]]}',`;
+                }
+            }
+            fields = fields.substring(0, fields.length - 1);
+            values = values.substring(0, values.length - 1);
+            sql = `insert into t_user (${fields}) values (${values})`;
+            mysqlDb.query(sql, (err, results, fld) => {
+                if (err == null) {
+                    console.log(results);
+                    return res.status(200).json(results);
+                }
+                else {
+                    console.log(err);
+                    return res.status(500).json({
+                        error: err.message
+                    });
+                }
+            })
         });
+
+
     }
 };
+
+
