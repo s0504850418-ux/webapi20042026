@@ -8,6 +8,14 @@ const routerUser=require('./api/v1/routes/user');
 const routerCategory=require('./api/v1/routes/category');
 const orderRouter = require('./api/v1/routes/order');
 //const mylog=require('./api/v1/middlewares/mylog');
+const auth=require('./api/v1/middlewares/auth');
+
+
+
+
+
+
+
 
 // connection.connect();
 // connection.query('SELECT * FROM t_product',(error,result,fields)=>{
@@ -44,9 +52,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use('/product',routerProduct);
-app.use('/user',routerUser)
+app.use('/product',auth,routerProduct);
+app.use('/user',auth,routerUser);
 app.use('/category',routerCategory)
 app.use('/order', orderRouter);
+
 
 module.exports=app;

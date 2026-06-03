@@ -17,7 +17,7 @@ module.exports = {
 
 
     getById: (req, res) => {
-        const pid = req.params.id;
+        const pid = req.params.pid;
         const sql = `SELECT * FROM t_product WHERE pid=${pid}`;
 
         mysqlDb.query(sql, (err, results, feilds) => {
@@ -46,8 +46,6 @@ module.exports = {
             }
         });
     },
-
-
 
     update: (req, res) => {
         const pid = req.params.id;
@@ -114,34 +112,3 @@ module.exports = {
         });
     }
 };
-//     AddNew: (req, res) => {
-//         let sql = 'INSERT INTO t_product SET ';
-//         let data = req.body;
-//         let arr = Object.keys(data);
-//         let values = '';
-
-//         let filds = ''
-//         for (let i = 0; i < arr.length; i++) {
-//             sql += `${arr[i]}='${data[arr[i]]}',`;
-//         }
-//         sql = sql.substring(0, sql.length - 1);
-//         sql += ' where pid=' + pid;
-//         mysqlDb.query(sql, (err, results, feilds) => {
-//             if (err == null) {
-//                 console.log(results);
-//                 return res.status(200).json(results);
-//             }
-//             else {
-//                 console.log(err);
-//                 return res.status(500).json({ 'error': err.message });
-//             }
-//         });
-//     }
-// };
-
-
-
-
-
-
-

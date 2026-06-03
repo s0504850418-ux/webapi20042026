@@ -1,7 +1,9 @@
 const mysqlDb = require('../modoels/mysqldb');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 module.exports = {
 
+    
 
     getAll: (req, res) => {
         const sql = 'SELECT * FROM t_user';
@@ -16,6 +18,7 @@ module.exports = {
             }
         });
     },
+
     getById: (req, res) => {
         const uid = req.params.uid;
         const sql = `SELECT * FROM t_user WHERE uid=${uid}`;
@@ -68,7 +71,6 @@ module.exports = {
         });
     },
 
-
     add: (req, res) => {
         let data = req.body;
         let arr = Object.keys(data);
@@ -115,7 +117,33 @@ module.exports = {
         });
 
 
+    },
+
+    login: (req, res) => {
+        let data = req.body;
+        let sql = `select * from t_user where email='${data.email}'`;
+        mysqlDb.query(sql, (err, results, fld) => {
+            if (err != null) {
+                console.log(results);
+                return res.status(500).json({ status: false,error:err.message, data: [] });
+            }
+            else if (results.length == 0) {
+                return res.status(200).json({ status: false,erorr: null, data: [] });
+            }
+            let user = results[0];
+            bcrypt.compare(data.pass, user.pass, (err, same) => {
+                if (err != null) {
+                    console.log(err);
+                    return res.status(500).json({ status: false, error: err.message, data: [] });
+                }
+                if (same == true) {
+                    const token = jwt.sign({ uid: user.uid, email: user.email}, process.env.PRIVATE_KEY,{ expiresIn: '1h' });
+                    return res.status(200).json({ status: true, error: null, data:results,token});
+                }
+                else {
+                    return res.status(200).json({ status: false, erorr: null, data: [] });
+                }
+            });
+        });
     }
-};
-
-
+}
