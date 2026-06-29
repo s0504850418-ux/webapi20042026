@@ -1,114 +1,60 @@
-const mysqlDb = require('../modoels/mysqldb');
+const productModel = require('../modoels/product');
+
 module.exports = {
 
-    getAll: (req, res) => {
-        const sql = 'SELECT * FROM t_product';
-        mysqlDb.query(sql, (err, results, feilds) => {
-            if (err == null) {
-                console.log(results);
-                res.status(200).json(results);
-            }
-            else {
-                console.log(err);
-                res.status(500).json({ 'error': err.message });
-            }
-        });
-    },
-
-
-    getById: (req, res) => {
-        const pid = req.params.pid;
-        const sql = `SELECT * FROM t_product WHERE pid=${pid}`;
-
-        mysqlDb.query(sql, (err, results, feilds) => {
-            if (err == null) {
-                console.log(results);
-                res.status(200).json(results);
-            }
-            else {
-                console.log(err);
-                res.status(500).json({ 'error': err.message });
-            }
-        });
-    },
-
-    delete: (req, res) => {
-        const pid = req.params.pid;
-        const sql = `DELETE FROM t_product WHERE pid=${pid}`;
-        mysqlDb.query(sql, (err, results, feilds) => {
-            if (err == null) {
-                console.log(results);
-                res.status(200).json(results);
-            }
-            else {
-                console.log(err);
-                res.status(500).json({ 'error': err.message });
-            }
-        });
-    },
-
-    update: (req, res) => {
-        const pid = req.params.id;
-        let sql = 'update t_product set ';
-        let data = req.body;
-        let arr = Object.keys(data);
-        for (let i = 0; i < arr.length; i++) {
-            sql += `${arr[i]}='${data[arr[i]]}',`;
+    getAll: async (req, res) => {
+        try {
+            const data = await productModel.find();
+            console.log('collection:', productModel.collection.name, 'count:', data.length);
+            return res.status(200).json(data);
         }
-        sql = sql.substring(0, sql.length - 1);
-        sql += ' where pid=' + pid;
-        mysqlDb.query(sql, (err, results, feilds) => {
-            if (err == null) {
-                console.log(results);
-                return res.status(200).json(results);
-            }
-            else {
-                console.log(err);
-                return res.status(500).json({ 'error': err.message });
-            }
-        });
+        catch (err) {
+            res.status(500).json(err);
+        }
     },
 
+    getById: async (req, res) => {
+        try {
+            const pid = req.params.pid;
+            const data = await productModel.find({ pid: pid });
+            return res.status(200).json(data);
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }
+    },
 
-
-
-
-
-
-
-    add: (req, res) => {
-
-        let data = req.body;
-        let arr = Object.keys(data);
-
-        let fields = "";
-        let values = "";
-
-        for (let i = 0; i < arr.length; i++) {
-
-            fields += `${arr[i]},`;
-
-            values += `'${data[arr[i]]}',`;
+    delete: async (req, res) => {
+        try {
+            const pid = req.params.pid;
+            const data = await productModel.deleteOne({ pid: pid });
+            return res.status(200).json(data);
+        }
+        catch (err) {
+            res.status(500).json(err);
         }
 
-        fields = fields.substring(0, fields.length - 1);
-        values = values.substring(0, values.length - 1);
-        let sql = `INSERT INTO t_product (${fields}) VALUES (${values})`;
-        mysqlDb.query(sql, (err, results, fields) => {
-            if (err == null) {
+    },
 
-                console.log(results);
+    update: async (req, res) => {
+        try {
+            const pid = req.params.id;
+            const data = await productModel.findOneAndUpdate({ pid: pid }, req.body, { new: true });
+            return res.status(200).json(data);
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }
+    },
 
-                return res.status(200).json(results);
-            }
-            else {
-
-                console.log(err);
-
-                return res.status(500).json({
-                    error: err.message
-                });
-            }
-        });
+    add: async (req, res) => {
+        try {
+            const product = new productModel(req.body);
+            const data = await product.save();
+            return res.status(201).json(data);
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }
     }
 };
