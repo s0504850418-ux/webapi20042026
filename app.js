@@ -1,7 +1,16 @@
 require('dotenv').config();
+require('dns').setServers(['8.8.8.8', '1.1.1.1']);
+const mongoose = require("mongoose");
 const express=require('express');
 const app=express();
 const morgan=require('morgan');
+
+const connStr = `mongodb+srv://${process.env.MONGO_USER}:${encodeURIComponent(process.env.MONGO_PASS)}@${process.env.MONGO_SRV}/EcomDb`;
+
+ mongoose.connect(connStr).then((conn) => {
+console.log('MongoDb connected');
+});
+
 
 const routerProduct=require('./api/v1/routes/product');
 const routerUser=require('./api/v1/routes/user');
@@ -52,10 +61,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use('/product',auth,routerProduct);
-app.use('/user',auth,routerUser);
+app.use('/product',routerProduct);
+app.use('/user',routerUser);
 app.use('/category',routerCategory)
 app.use('/order', orderRouter);
-
 
 module.exports=app;
