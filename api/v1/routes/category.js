@@ -1,14 +1,23 @@
-const router=require('express').Router();
-const categoryController=require('../controllrs/category');
+// יוצר Router של Express לניהול נתיבי categories
+const router = require('express').Router();
 
-router.get('/',categoryController.getAll);
+// מייבא את ה-controller של categories
+const categoryController = require('../controllrs/category');
 
-router.get('/:cid',categoryController.getByid);
+// GET /category - מחזיר את כל הקטגוריות מ-MySQL
+router.get('/', categoryController.getAll);
 
-router.delete('/:cid',categoryController.delete);
+// GET /category/:cid - מחזיר קטגוריה אחת לפי ID
+router.get('/:cid', categoryController.getByid);
 
-router.post('/',categoryController.add);
+// DELETE /category/:cid - מוחק קטגוריה לפי ID
+router.delete('/:cid', categoryController.delete);
 
-router.put('/:cid',categoryController.update);
+// POST /category - מוסיף קטגוריה חדשה
+// הנתונים מגיעים ב-body של הבקשה
+router.post('/', categoryController.add);
 
-module.exports=router;
+// PUT /category/:cid - מעדכן קטגוריה קיימת
+router.put('/:cid', categoryController.update);
+
+module.exports = router;

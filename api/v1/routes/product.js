@@ -1,14 +1,26 @@
-const router=require('express').Router();
-const productController=require('../controllrs/product');
+// יוצר Router של Express - אובייקט שמנהל את כל הנתיבים של products בנפרד
+const router = require('express').Router();
 
-router.get('/',productController.getAll);
+// מייבא את ה-controller של products - שם נמצאת כל הלוגיקה האמיתית
+const productController = require('../controllrs/product');
 
-router.get('/:pid',productController.getById);
+// GET /product - מחזיר את כל המוצרים מה-DB
+// כשמישהו שולח GET ל-/product הפונקציה getAll רצה
+router.get('/', productController.getAll);
 
-router.delete('/:pid',productController.delete);
+// GET /product/:pid - מחזיר מוצר אחד לפי ID
+// :pid זה פרמטר דינמי - /product/5 יתפוס pid=5
+router.get('/:pid', productController.getById);
 
-router.post('/',productController.add);
+// DELETE /product/:pid - מוחק מוצר לפי ID
+router.delete('/:pid', productController.delete);
 
-router.put('/:id',productController.update);
+// POST /product - מוסיף מוצר חדש
+// הנתונים של המוצר מגיעים ב-body של הבקשה (JSON)
+router.post('/', productController.add);
 
-module.exports=router;
+// PUT /product/:id - מעדכן מוצר קיים לפי ID
+router.put('/:id', productController.update);
+
+// מייצא את ה-router כדי שapp.js יוכל להשתמש בו
+module.exports = router;

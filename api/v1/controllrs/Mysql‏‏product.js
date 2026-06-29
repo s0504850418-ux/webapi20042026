@@ -70,12 +70,6 @@ module.exports = {
     },
 
 
-
-
-
-
-
-
     add: (req, res) => {
 
         let data = req.body;
